@@ -6,6 +6,9 @@ from keras.layers import Lambda
 from keras.layers import Dot
 from keras.models import Model
 from keras.optimizers import Adam
+from keras.utils import multi_gpu_model
+from keras.applications import Xception
+
 import keras.backend as K
 
 from ..losses import contrastive_loss
@@ -14,7 +17,7 @@ from ..distances import euclidean_distance
 #------------------IMPORTS---------------------#
 
 
-def make_siamese(twin_model, dist='l1', loss='cross_entropy', train_opt=None):
+def make_siamese(twin_model, dist='l1', loss='cross_entropy', train_opt=None, multi_gpus = False):
     # two inputs: left and right
     # 1: because we skip batch size
     input_shape = twin_model.layers[0].input_shape[1:]
@@ -61,6 +64,9 @@ def make_siamese(twin_model, dist='l1', loss='cross_entropy', train_opt=None):
 
     # create model
     model = Model(inputs=[l_input, r_input], outputs=output)
+    
+    if multi_gpus is True:
+        model = multi_gpu_model( model )
     # compile it
     train_opt = Adam(lr=0.0001) if train_opt is None else train_opt
     model.compile(loss=loss_arg, optimizer=train_opt, metrics=['accuracy']) 
