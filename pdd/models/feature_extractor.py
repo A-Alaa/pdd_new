@@ -37,13 +37,13 @@ def conv_block(n_filters,
     return _conv_block
 
 
-def get_feature_extractor(input_shape, dropout = 0):
+def get_feature_extractor(input_shape, dropout_arg = 0):
     inputs = Input(input_shape)
-    x = conv_block(32, (10, 10), batch_norm=True, dropout)(inputs)
-    x = conv_block(64, (7, 7), batch_norm=True, dropout)(x)
-    x = conv_block(128, (5, 5), batch_norm=True, dropout)(x)
-    x = conv_block(256, (3, 3), batch_norm=True, dropout)(x)
-    x = conv_block(512, (3, 3), batch_norm=True, dropout)(x)
+    x = conv_block(32, (10, 10), batch_norm=True, dropout=dropout_arg)(inputs)
+    x = conv_block(64, (7, 7), batch_norm=True, dropout=dropout_arg)(x)
+    x = conv_block(128, (5, 5), batch_norm=True, dropout=dropout_arg)(x)
+    x = conv_block(256, (3, 3), batch_norm=True, dropout=dropout_arg)(x)
+    x = conv_block(512, (3, 3), batch_norm=True, dropout=dropout_arg)(x)
     x = Flatten()(x)
     encoded = Dense(1024, activation='sigmoid')(x)
     return Model(inputs, encoded)
