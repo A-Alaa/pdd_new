@@ -66,7 +66,7 @@ def make_siamese(twin_model, dist='l1', loss='cross_entropy', train_opt=None, mu
     model = Model(inputs=[l_input, r_input], outputs=output)
     
     if multi_gpus is True:
-        model = multi_gpu_model( model )
+        model = multi_gpu_model( model, cpu_merge=True, cpu_relocation=False)
     # compile it
     train_opt = Adam(lr=0.0001) if train_opt is None else train_opt
     model.compile(loss=loss_arg, optimizer=train_opt, metrics=['accuracy']) 
